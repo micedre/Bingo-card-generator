@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>build-with-dependencies</actionName>
+            <reactor>also-make</reactor>
+            <goals>
+                <goal>build-with-dependencies</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-assembly:assembly</actionName>
+            <displayName>assembly:assembly</displayName>
+            <goals>
+                <goal>assembly:single</goal>
+            </goals>
+        </action>
+    </actions>
