@@ -9,23 +9,42 @@
     <packaging>jar</packaging>
 
     <name>bingo-card-generator</name>
-    <url>http://maven.apache.org</url>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <!-- this is to extract the JRE tgz file we downloaded -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>com.oracle.java</includeGroupIds>
+                            <includeTypes>tgz</includeTypes>
+                            <includeArtifactIds>jre</includeArtifactIds>
+                            <includeClassifiers>win32</includeClassifiers>
+                            <outputDirectory>target/win32</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>2.1</version>
+        <version>3.2.1</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -72,7 +91,7 @@
             <configuration>
                 <headerType>gui</headerType>
                 <outfile>target/bingo-generator.exe</outfile>
-                <jar>target/${artifactId}-${version}-shaded.jar</jar> <!-- 'shaded' is the value set on shadedClassifierName above -->
+                <jar>target/${artifactId}-${version}.jar</jar> <!-- 'shaded' is the value set on shadedClassifierName above -->
                 <errTitle>App Err</errTitle>
                 <icon>src/main/resources/icone.ico</icon>
                 
@@ -82,7 +101,7 @@
                 <jre>
                     <initialHeapSize>128</initialHeapSize>
                     <maxHeapSize>1024</maxHeapSize>
-                   <path>./lib/jre</path>
+                   <path>./win32/java</path>
                 </jre>
                 <versionInfo>
                     <fileVersion>1.0.0.0</fileVersion>
@@ -127,5 +146,20 @@
         <version>1.1.1</version>
         <type>jar</type>
     </dependency>
+      <dependency>
+            <groupId>com.oracle.java</groupId>
+            <artifactId>jre</artifactId>
+            <classifier>win32</classifier>
+            <type>tgz</type>
+            <scope>provided</scope>
+            <version>1.8.0_131</version>
+        </dependency>
 </dependencies>
+<repositories>
+        <repository>
+            <!-- this repository has the JRE tgz -->
+            <id>alfresco</id>
+            <url>https://artifacts.alfresco.com/nexus/content/repositories/public/</url>
+        </repository>
+    </repositories>
 </project>

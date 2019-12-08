@@ -5,20 +5,38 @@
   <artifactId>bingo-card-generator</artifactId>
   <name>bingo-card-generator</name>
   <version>1.0-SNAPSHOT</version>
-  <url>http://maven.apache.org</url>
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>3.8.1</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
       <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.5.1</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeGroupIds>com.oracle.java</includeGroupIds>
+              <includeTypes>tgz</includeTypes>
+              <includeArtifactIds>jre</includeArtifactIds>
+              <includeClassifiers>win32</includeClassifiers>
+              <outputDirectory>target/win32</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>2.1</version>
+        <version>3.2.1</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -62,7 +80,7 @@
             <configuration>
               <headerType>gui</headerType>
               <outfile>target/bingo-generator.exe</outfile>
-              <jar>target/${artifactId}-${version}-shaded.jar</jar>
+              <jar>target/${artifactId}-${version}.jar</jar>
               <errTitle>App Err</errTitle>
               <icon>src/main/resources/icone.ico</icon>
               <classPath>
@@ -71,7 +89,7 @@
               <jre>
                 <initialHeapSize>128</initialHeapSize>
                 <maxHeapSize>1024</maxHeapSize>
-                <path>./lib/jre</path>
+                <path>./win32/java</path>
               </jre>
               <versionInfo>
                 <fileVersion>1.0.0.0</fileVersion>
@@ -90,6 +108,12 @@
       </plugin>
     </plugins>
   </build>
+  <repositories>
+    <repository>
+      <id>alfresco</id>
+      <url>https://artifacts.alfresco.com/nexus/content/repositories/public/</url>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -97,9 +121,16 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.oracle.java</groupId>
+      <artifactId>jre</artifactId>
+      <version>1.8.0_131</version>
+      <type>tgz</type>
+      <classifier>win32</classifier>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>
-
